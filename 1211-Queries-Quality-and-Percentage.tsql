@@ -1,0 +1,17 @@
+/* Write your T-SQL query statement below */
+SELECT
+    q.query_name ,
+    round(((sum(q.rating*1.00 / q.position*1.00)*1.0) / (count(*)*1.0)),2) AS quality  ,
+    isnull(round( ((q2.cnt*1.0 / count(*) *1.0 )*100 ),2),0) AS poor_query_percentage
+FROM
+    queries AS q
+    LEFT JOIN (SELECT
+        query_name ,
+        count(*) AS cnt
+    FROM
+        queries
+    WHERE rating  < 3
+    GROUP BY query_name   ) AS q2
+    ON q.query_name = q2.query_name
+GROUP BY q.query_name , q2.cnt
+ORDER BY q.query_name 
