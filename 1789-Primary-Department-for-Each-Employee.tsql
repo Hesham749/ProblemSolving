@@ -1,0 +1,25 @@
+
+SELECT
+    isnull(t2.employee_id,t1.employee_id) AS employee_id  ,
+    isnull(e3.department_id, t2.department_id) AS department_id
+FROM
+    (
+SELECT
+        e.employee_id
+    FROM
+        employee AS e
+    GROUP BY e.employee_id
+    HAVING COUNT(*) =1 
+)
+AS t1
+    JOIN
+    employee AS e3
+    ON t1.employee_id = e3.employee_id
+    FULL OUTER JOIN (SELECT
+        *
+    FROM
+        employee
+    WHERE primary_flag = 'y' ) AS t2
+    ON t2.employee_id = t1.employee_id OR t2.employee_id IS NULL
+ORDER BY employee_id
+    
