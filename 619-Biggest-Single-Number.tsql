@@ -1,0 +1,8 @@
+/* Write your T-SQL query statement below */
+select  top(1)  t1.num from (select * from mynumbers
+group by num
+having count(*) = 1
+union 
+select null as num ) as t1
+order by t1.num desc 
+
