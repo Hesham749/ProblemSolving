@@ -1,0 +1,6 @@
+/* Write your T-SQL query statement below */
+select e.employee_id from employees as e
+where
+ not exists(select employee_id from employees as m where e.manager_id = m.employee_id )
+ and e.manager_id is not null and e.salary < 30000
+ order by e.employee_id 
