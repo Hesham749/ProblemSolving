@@ -1,0 +1,2 @@
+/* Write your T-SQL query statement below */
+select * , case when (x >=y and x>= z and x < y+z ) or  (y >=x and y>= z and y < x+z ) or  (z >=y and z>= x and z < x+y )  then 'Yes' else 'No' end as triangle from triangle  as t
