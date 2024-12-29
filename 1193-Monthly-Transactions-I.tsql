@@ -1,53 +1,9 @@
-SELECT
-    DISTINCT
-    *
-FROM
-    (SELECT
-        month ,
-        country 
-        ,
-        COUNT(*) OVER(partition BY month , country) trans_count  ,
-        isnull((SELECT
-            count(*)
-        FROM
-            TRANSACTIONs AS t5
-        WHERE state ='approved' AND (isnull(t6.country,t5.country) = t5.country ) AND CONVERT(VARCHAR(7),t5.trans_date) = t6.month),0) approved_count,
-        (SELECT
-            sum(amount)
-        FROM
-            TRANSACTIONs AS t5
-        WHERE (isnull(t6.country,t5.country) = t5.country )  AND CONVERT(VARCHAR(7),t5.trans_date) = t6.month )trans_total_amount,
-
-        isnull((SELECT
-            sum(amount)
-        FROM
-            TRANSACTIONs AS t5
-        WHERE state ='approved' AND (isnull(t6.country,t5.country) = t5.country )  and CONVERT(VARCHAR(7),t5.trans_date) = t6.month ),0)
-    approved_total_amount
-    FROM
-
-        (SELECT
-            *
-
-        FROM
-            (SELECT
-
-                DISTINCT
-                *
-            FROM
-                (
-                SELECT
-                    *
-                FROM
-                    TRANSACTIONs AS t
-                    JOIN
-                    (SELECT
-                        CONVERT(VARCHAR(7),trans_date) AS month
-                    FROM
-                        Transactions
-         )
-AS t1
-                    ON CONVERT(VARCHAR(7),t.trans_date) = t1.month
-) AS t3)AS t4)AS t6
-    GROUP BY [month] , country , id) AS t7
-order by month , country desc
+SELECT 
+    CONVERT(VARCHAR(7),trans_date) AS month
+     ,country
+    , COUNT(*) AS trans_count
+    , SUM(case when (state = 'approved')then 1 else 0 end) AS approved_count
+    , SUM(amount) AS trans_total_amount
+    , SUM(case when (state = 'approved')then amount else 0 end) AS approved_total_amount
+FROM Transactions
+GROUP BY  CONVERT(VARCHAR(7),trans_date) , country
