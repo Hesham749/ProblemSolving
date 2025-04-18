@@ -1,26 +1,18 @@
 public class Solution {
     public  string GcdOfStrings(string str1, string str2)
  {
-     int lastIndex = str2.Length - 1;
- string gcd = string.Empty;
+   if (!(str1 + str2).Equals(str2 + str1)) return "";
 
- for (int i = str2.Length ; i >= 1; i--)
- {
-     if (str2.Length % i == 0)
-     {
-         lastIndex = i;
-         gcd = str2[..lastIndex];
-         if (!HasDiffValue(str2, gcd) && !HasDiffValue(str1, gcd))
-             return gcd;
-     }
- }
-
- return "";
+int a = str1.Length, b = str2.Length;
+int temp;
+while (b > 0)
+{
+    temp = b;
+    b = a % b;
+    a = temp;
+}
+return str1[..a];
 
  }
 
- private  bool HasDiffValue(string str1, string str2)
- {
-     return str1.Split(str2).Any(s => !string.IsNullOrEmpty(s));
- }
 }
